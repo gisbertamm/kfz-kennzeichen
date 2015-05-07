@@ -1,12 +1,20 @@
 package kfzkennzeichen.gisbertamm.de.kfz_kennzeichen;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import kfzkennzeichen.gisbertamm.de.kfz_kennzeichen.persistence.SavedEntry;
 
-public class SearchActivity extends ActionBarActivity {
+
+public class SearchActivity extends ActionBarActivity implements OnSearchCompletedListener {
+
+    private static final String SEARCH = "searchFragment";
+    private static final String RESULT = "resultFragment";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -14,6 +22,20 @@ public class SearchActivity extends ActionBarActivity {
         setContentView(R.layout.activity_search);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        SearchFragment search = (SearchFragment)
+                getFragmentManager().findFragmentByTag(SEARCH);
+        if (search == null) {
+            search = new SearchFragment();
+        }
+
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.replace(R.id.container, search, SEARCH).addToBackStack(SEARCH);
+        ft.commit();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -35,5 +57,34 @@ public class SearchActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSearchCompleted(SavedEntry entry, String code) {
+        if (entry != null) {
+            Log.d(this.getClass().getSimpleName(), "Matching entry: " + entry);
+        } else {
+            Log.d(this.getClass().getSimpleName(), "Nothing found for " + code);
+        }
+
+        ResultFragment result = (ResultFragment)
+                getFragmentManager().findFragmentByTag(RESULT);
+        if (result == null) {
+            result = ResultFragment.newInstance(entry);
+
+        }
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.replace(R.id.container, result, RESULT).addToBackStack(RESULT);
+        ft.commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        FragmentManager fragmentManager = getFragmentManager();
+        if(fragmentManager.getBackStackEntryCount() != 0) {
+            fragmentManager.popBackStack();
+        } else {
+            super.onBackPressed();
+        }
     }
 }

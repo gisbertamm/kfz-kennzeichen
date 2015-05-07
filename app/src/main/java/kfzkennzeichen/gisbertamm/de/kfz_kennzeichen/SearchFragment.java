@@ -1,7 +1,7 @@
 package kfzkennzeichen.gisbertamm.de.kfz_kennzeichen;
 
 import android.app.Activity;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.InputFilter;
@@ -20,9 +20,6 @@ import kfzkennzeichen.gisbertamm.de.kfz_kennzeichen.persistence.DatabaseHandler;
 import kfzkennzeichen.gisbertamm.de.kfz_kennzeichen.persistence.SavedEntry;
 
 
-/**
- * A placeholder fragment containing a simple view.
- */
 public class SearchFragment extends Fragment {
 
     public static final String UTF8_CAR_SYMBOL = "&#x1f697;";

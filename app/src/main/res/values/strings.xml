@@ -3,4 +3,6 @@
     <string name="please_enter_numberplate_code">Bitte Kennzeichen eingeben</string>
     <string name="action_settings">Settings</string>
     <string name="search">Suchen</string>
+    <string name="nothing_found">Dieses Kennzeichen gibt es nicht.</string>
+    <string name="jokes_heading">Sprüche</string>
 </resources>

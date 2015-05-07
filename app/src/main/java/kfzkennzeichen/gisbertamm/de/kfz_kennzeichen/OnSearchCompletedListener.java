@@ -1,7 +1,7 @@
 package kfzkennzeichen.gisbertamm.de.kfz_kennzeichen;
 
-/**
- * Created by giam on 07.05.15.
- */
+import kfzkennzeichen.gisbertamm.de.kfz_kennzeichen.persistence.SavedEntry;
+
 public interface OnSearchCompletedListener {
+    public void onSearchCompleted(SavedEntry entry, String code);
 }
