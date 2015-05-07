@@ -1,5 +1,6 @@
 package kfzkennzeichen.gisbertamm.de.kfz_kennzeichen;
 
+import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.text.Html;
@@ -22,11 +23,23 @@ import kfzkennzeichen.gisbertamm.de.kfz_kennzeichen.persistence.SavedEntry;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class SearchActivityFragment extends Fragment {
+public class SearchFragment extends Fragment {
 
     public static final String UTF8_CAR_SYMBOL = "&#x1f697;";
+    private OnSearchCompletedListener mListener;
 
-    public SearchActivityFragment() {
+
+    public SearchFragment() {
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mListener = (OnSearchCompletedListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement " + OnSearchCompletedListener.class.getSimpleName());
+        }
     }
 
     @Override
@@ -47,11 +60,9 @@ public class SearchActivityFragment extends Fragment {
                 DatabaseHandler db = new DatabaseHandler(getActivity());
                 String code = numberplateCodeInput.getText().toString();
                 SavedEntry savedEntry = db.searchForCode(code);
-                if (savedEntry != null) {
-                    Log.d(this.getClass().getSimpleName(), "Matching entry: " + savedEntry);
-                } else {
-                    Log.d(this.getClass().getSimpleName(), "Nothing found for " + code);
-                }
+
+                // propagate result to parent activityx for further processing
+                mListener.onSearchCompleted(savedEntry, code);
             }
         });
 
