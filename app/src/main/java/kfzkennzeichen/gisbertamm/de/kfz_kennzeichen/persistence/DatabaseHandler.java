@@ -25,15 +25,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String COLUMN_DISTRICT_WIKIPEDIA_URL = "district_wikipedia_url";
     private static final String COLUMN_JOKES = "jokes";
     public static final String WIKIPEDIA_BASE_URL = "http://de.wikipedia.org/wiki/";
+    private static final List<String[]> data = new ArrayList<String[]>();
 
-    private List<String[]> data = new ArrayList<String[]>();
-
-    public DatabaseHandler(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    static {
         // TODO create database with DBUnit and install the app with the readily prepared database file
         data.add(new String[]{"A", "Landkreis Augsburg", "Augsburg", "Bayern", WIKIPEDIA_BASE_URL + "Augsburg", "keine Sprüche bekannt"});
         data.add(new String[]{"AA", "Ostalbkreis", "Aalen", "Baden-Württemberg", WIKIPEDIA_BASE_URL + "Aalen", "Alle Achtung;Alles Arschlöcher"});
         // data.add(new String[]{"", "", WIKIPEDIA_BASE_URL + "", ""});
+    }
+
+    public DatabaseHandler(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
