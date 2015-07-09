@@ -66,6 +66,19 @@ public class SearchFragment extends Fragment {
             }
         });
 
+        Button randomButton = (Button) view.findViewById(R.id.random_button);
+        randomButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatabaseHandler db = new DatabaseHandler(getActivity());
+                SavedEntry savedEntry = db.searchRandom();
+
+                // propagate result to parent activity for further processing
+                mListener.onSearchCompleted(savedEntry, savedEntry.getCode());
+            }
+        });
+
+
         return view;
     }
 

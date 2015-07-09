@@ -5,4 +5,5 @@
     <string name="search">Suchen</string>
     <string name="nothing_found">Dieses Kennzeichen gibt es nicht.</string>
     <string name="jokes_heading">Sprüche</string>
+    <string name="random">Zufallsauswahl</string>
 </resources>

@@ -1,11 +1,11 @@
 package kfzkennzeichen.gisbertamm.de.kfz_kennzeichen.persistence;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -36,9 +36,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     //The Android's default system path of your application database.
     private static String DB_PATH = "/data/data/kfzkennzeichen.gisbertamm.de.kfz_kennzeichen/databases/";
 
-    private SQLiteDatabase myDataBase;
+    private SQLiteDatabase dataBase;
 
-    private final Context myContext;
+    private final Context context;
 
     /**
      * Constructor
@@ -48,7 +48,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      */
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        this.myContext = context;
+        this.context = context;
         // copy database implicitly when class instance is created for the first time
         createDataBase();
     }
@@ -109,7 +109,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private void copyDataBase() {
         try {
             //Open your local db as the input stream
-            InputStream myInput = myContext.getAssets().open(DATABASE_NAME);
+            InputStream myInput = context.getAssets().open(DATABASE_NAME);
 
             // Path to the just created empty db
             String outFileName = DB_PATH + DATABASE_NAME;
@@ -138,15 +138,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         //Open the database
         String myPath = DB_PATH + DATABASE_NAME;
-        myDataBase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
+        dataBase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
 
     }
 
     @Override
     public synchronized void close() {
 
-        if (myDataBase != null)
-            myDataBase.close();
+        if (dataBase != null)
+            dataBase.close();
 
         super.close();
 
@@ -170,12 +170,42 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             return null;
         }
 
-        Cursor cursor = myDataBase.query(TABLE_NUMBERPLATE_CODES, new String[]{COLUMN_ID,
-                        COLUMN_CODE, COLUMN_DISTRICT, COLUMN_DISTRICT_CENTER, COLUMN_STATE,
-                        COLUMN_DISTRICT_WIKIPEDIA_URL, COLUMN_JOKES}, COLUMN_CODE + "=?",
+        Cursor cursor = this.dataBase.query(TABLE_NUMBERPLATE_CODES, new String[]{"*"}, COLUMN_CODE + "=?",
                 new String[]{String.valueOf(code)}, null, null, null, null);
+
         if (cursor != null) {
             cursor.moveToFirst();
+        } else {
+            Log.e(this.getClass().getSimpleName(), "cursor is null");
+            return null;
+        }
+
+        SavedEntry savedEntry = null;
+
+        if (cursor.getCount() > 0) {
+            savedEntry = new SavedEntry(Integer.parseInt(cursor.getString(0)),
+                    cursor.getString(1), cursor.getString(2), cursor.getString(3),
+                    cursor.getString(4), cursor.getString(5), cursor.getString(6));
+        }
+
+        return savedEntry;
+    }
+
+    public SavedEntry searchRandom() {
+        try {
+            this.openDataBase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        Cursor cursor = this.dataBase.query(TABLE_NUMBERPLATE_CODES + " ORDER BY RANDOM() LIMIT 1",
+                new String[]{"*"}, null, null, null, null, null);
+        if (cursor != null) {
+            cursor.moveToFirst();
+        } else {
+            Log.e(this.getClass().getSimpleName(), "cursor is null");
+            return null;
         }
 
         SavedEntry savedEntry = null;
