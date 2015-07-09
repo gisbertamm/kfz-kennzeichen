@@ -20,7 +20,8 @@
         android:id="@+id/input_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_above="@+id/numberplate_code_input"
+        android:layout_centerHorizontal="true"
         android:text="@string/please_enter_numberplate_code"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -28,8 +29,7 @@
         android:id="@+id/numberplate_code_input"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/input_label"
-        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
         android:layout_marginTop="24dp"
         android:maxLength="3"
         android:minEms="3"
