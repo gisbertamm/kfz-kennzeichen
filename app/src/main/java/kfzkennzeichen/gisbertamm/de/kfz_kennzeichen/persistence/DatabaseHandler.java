@@ -4,8 +4,14 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,11 +19,11 @@ import java.util.List;
 public class DatabaseHandler extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 
-    private static final String DATABASE_NAME = "NumberplateCodesManager";
+    private static final String DATABASE_NAME = "NumberplateCodesManager.sqlite";
 
     private static final String TABLE_NUMBERPLATE_CODES = "numberplate_codes";
 
-    private static final String COLUMN_ID = "id";
+    private static final String COLUMN_ID = "_id";
     private static final String COLUMN_CODE = "code";
     private static final String COLUMN_DISTRICT = "district";
     private static final String COLUMN_DISTRICT_CENTER = "district_center";
@@ -27,55 +33,144 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String WIKIPEDIA_BASE_URL = "http://de.wikipedia.org/wiki/";
     private static final List<String[]> data = new ArrayList<String[]>();
 
-    static {
-        // TODO create database with DBUnit and install the app with the readily prepared database file
-        data.add(new String[]{"A", "Landkreis Augsburg", "Augsburg", "Bayern", WIKIPEDIA_BASE_URL + "Augsburg", "keine Sprüche bekannt"});
-        data.add(new String[]{"AA", "Ostalbkreis", "Aalen", "Baden-Württemberg", WIKIPEDIA_BASE_URL + "Aalen", "Alle Achtung;Alles Arschlöcher"});
-        // data.add(new String[]{"", "", WIKIPEDIA_BASE_URL + "", ""});
-    }
+    //The Android's default system path of your application database.
+    private static String DB_PATH = "/data/data/kfzkennzeichen.gisbertamm.de.kfz_kennzeichen/databases/";
 
+    private SQLiteDatabase myDataBase;
+
+    private final Context myContext;
+
+    /**
+     * Constructor
+     * Takes and keeps a reference of the passed context in order to access to the application assets and resources.
+     *
+     * @param context
+     */
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.myContext = context;
+        // copy database implicitly when class instance is created for the first time
+        createDataBase();
+    }
+
+    /**
+     * Creates a empty database on the system and rewrites it with your own database.
+     */
+    public void createDataBase() {
+
+        boolean dbExist = checkDataBase();
+
+        if (dbExist) {
+            //do nothing - database already exist
+        } else {
+
+            //By calling this method an empty database will be created into the default system path
+            //of your application so we are gonna be able to overwrite that database with our database.
+            this.getReadableDatabase();
+
+            copyDataBase();
+
+        }
+    }
+
+    /**
+     * Check if the database already exist to avoid re-copying the file each time you open the application.
+     *
+     * @return true if it exists, false if it doesn't
+     */
+    private boolean checkDataBase() {
+
+        SQLiteDatabase checkDB = null;
+
+        try {
+            String myPath = DB_PATH + DATABASE_NAME;
+            checkDB = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
+
+        } catch (SQLiteException e) {
+
+            //database does't exist yet.
+
+        }
+
+        if (checkDB != null) {
+
+            checkDB.close();
+
+        }
+
+        return checkDB != null ? true : false;
+    }
+
+    /**
+     * Copies your database from your local assets-folder to the just created empty database in the
+     * system folder, from where it can be accessed and handled.
+     * This is done by transfering bytestream.
+     */
+    private void copyDataBase() {
+        try {
+            //Open your local db as the input stream
+            InputStream myInput = myContext.getAssets().open(DATABASE_NAME);
+
+            // Path to the just created empty db
+            String outFileName = DB_PATH + DATABASE_NAME;
+
+            //Open the empty db as the output stream
+            OutputStream myOutput = new FileOutputStream(outFileName);
+
+            //transfer bytes from the inputfile to the outputfile
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = myInput.read(buffer)) > 0) {
+                myOutput.write(buffer, 0, length);
+            }
+
+            //Close the streams
+            myOutput.flush();
+            myOutput.close();
+            myInput.close();
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot copy database", e);
+        }
+
+    }
+
+    public void openDataBase() throws SQLException {
+
+        //Open the database
+        String myPath = DB_PATH + DATABASE_NAME;
+        myDataBase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
+
+    }
+
+    @Override
+    public synchronized void close() {
+
+        if (myDataBase != null)
+            myDataBase.close();
+
+        super.close();
+
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String CREATE_NUMBERPLATES_CODE_TABLE = "CREATE TABLE " + TABLE_NUMBERPLATE_CODES + "("
-                + COLUMN_ID + " INTEGER PRIMARY KEY," + COLUMN_CODE + " TEXT,"
-                + COLUMN_DISTRICT + " TEXT," + COLUMN_DISTRICT_CENTER + " TEXT," + COLUMN_STATE + " TEXT,"
-                + COLUMN_DISTRICT_WIKIPEDIA_URL + " TEXT," + COLUMN_JOKES + " TEXT" + ")";
-        db.execSQL(CREATE_NUMBERPLATES_CODE_TABLE);
-
-        // TODO create database with DBUnit and install the app with the readily prepared database file
-        insertData(db);
-    }
-
-    private void insertData(SQLiteDatabase db) {
-        for (String[] entry : this.data) {
-            ContentValues values = new ContentValues();
-
-            values.put(COLUMN_CODE, entry[0]);
-            values.put(COLUMN_DISTRICT, entry[1]);
-            values.put(COLUMN_DISTRICT_CENTER, entry[2]);
-            values.put(COLUMN_STATE, entry[3]);
-            values.put(COLUMN_DISTRICT_WIKIPEDIA_URL, entry[4]);
-            values.put(COLUMN_JOKES, entry[5]);
-
-            db.insert(TABLE_NUMBERPLATE_CODES, null, values);
-        }
+        // do nothing because database is provided from assets
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NUMBERPLATE_CODES);
-
-        onCreate(db);
+        // do nothing because database is provided from assets
     }
 
     public SavedEntry searchForCode(String code) {
-        SQLiteDatabase db = this.getReadableDatabase();
+        try {
+            this.openDataBase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
 
-        Cursor cursor = db.query(TABLE_NUMBERPLATE_CODES, new String[]{COLUMN_ID,
+        Cursor cursor = myDataBase.query(TABLE_NUMBERPLATE_CODES, new String[]{COLUMN_ID,
                         COLUMN_CODE, COLUMN_DISTRICT, COLUMN_DISTRICT_CENTER, COLUMN_STATE,
                         COLUMN_DISTRICT_WIKIPEDIA_URL, COLUMN_JOKES}, COLUMN_CODE + "=?",
                 new String[]{String.valueOf(code)}, null, null, null, null);
