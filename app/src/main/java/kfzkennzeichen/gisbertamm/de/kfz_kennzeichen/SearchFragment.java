@@ -58,7 +58,10 @@ public class SearchFragment extends Fragment {
                 String code = numberplateCodeInput.getText().toString();
                 SavedEntry savedEntry = db.searchForCode(code);
 
-                // propagate result to parent activityx for further processing
+                // clear input field
+                numberplateCodeInput.getEditableText().clear();
+
+                // propagate result to parent activity for further processing
                 mListener.onSearchCompleted(savedEntry, code);
             }
         });
