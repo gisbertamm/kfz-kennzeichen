@@ -30,7 +30,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String COLUMN_STATE = "state";
     private static final String COLUMN_DISTRICT_WIKIPEDIA_URL = "district_wikipedia_url";
     private static final String COLUMN_JOKES = "jokes";
-    public static final String WIKIPEDIA_BASE_URL = "http://de.wikipedia.org/wiki/";
+    public static final String WIKIPEDIA_BASE_URL = "https://de.wikipedia.org";
     private static final List<String[]> data = new ArrayList<String[]>();
 
     //The Android's default system path of your application database.
