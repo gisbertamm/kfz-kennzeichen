@@ -22,6 +22,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "NumberplateCodesManager.sqlite";
 
     private static final String TABLE_NUMBERPLATE_CODES = "numberplate_codes";
+    private static final String TABLE_JOKES = "jokes";
 
     private static final String COLUMN_ID = "_id";
     private static final String COLUMN_CODE = "code";
@@ -186,6 +187,19 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             savedEntry = new SavedEntry(Integer.parseInt(cursor.getString(0)),
                     cursor.getString(1), cursor.getString(2), cursor.getString(3),
                     cursor.getString(4), cursor.getString(5), cursor.getString(6));
+
+            Cursor cursor2 = this.dataBase.query(TABLE_JOKES, new String[]{"*"}, COLUMN_CODE + "=?",
+                    new String[]{String.valueOf(code)}, null, null, null, null);
+
+            if (cursor2 != null) {
+                cursor2.moveToFirst();
+            } else {
+                Log.e(this.getClass().getSimpleName(), "cursor2 is null");
+                return null;
+            }
+            if (cursor2.getCount() > 0) {
+                savedEntry.setJokes(cursor2.getString(1));
+            }
         }
 
         return savedEntry;
