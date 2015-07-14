@@ -29,20 +29,20 @@ public class SavedEntry implements Serializable {
     }
 
     private String _district_wikipedia_url;
-    private String _jokes;
+    private List<String> _jokes;
 
     public SavedEntry() {
     }
 
     public SavedEntry(int id, String code, String district, String districtCenter,
-                      String state, String districtWikipediaUrl, String jokes) {
+                      String state, String districtWikipediaUrl) {
         this._id = id;
         this._code = code;
         this._district = district;
         this._district_center = districtCenter;
         this._state = state;
         this._district_wikipedia_url = districtWikipediaUrl;
-        this._jokes = jokes;
+        this._jokes = new ArrayList<String>();
     }
 
     public int getId() {
@@ -79,12 +79,11 @@ public class SavedEntry implements Serializable {
     }
 
     public List<String> getJokes() {
-        String[] jokes = _jokes.split(";");
-        return new ArrayList<String>(Arrays.asList(jokes));
+        return _jokes;
     }
 
-    public void setJokes(String jokes) {
-        this._jokes = jokes;
+    public void setJoke(String joke) {
+        this._jokes.add(joke);
     }
 
     @Override

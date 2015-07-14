@@ -30,7 +30,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String COLUMN_DISTRICT_CENTER = "district_center";
     private static final String COLUMN_STATE = "state";
     private static final String COLUMN_DISTRICT_WIKIPEDIA_URL = "district_wikipedia_url";
-    private static final String COLUMN_JOKES = "jokes";
     public static final String WIKIPEDIA_BASE_URL = "https://de.wikipedia.org";
     private static final List<String[]> data = new ArrayList<String[]>();
 
@@ -186,23 +185,32 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (cursor.getCount() > 0) {
             savedEntry = new SavedEntry(Integer.parseInt(cursor.getString(0)),
                     cursor.getString(1), cursor.getString(2), cursor.getString(3),
-                    cursor.getString(4), cursor.getString(5), cursor.getString(6));
+                    cursor.getString(4), cursor.getString(5));
 
-            Cursor cursor2 = this.dataBase.query(TABLE_JOKES, new String[]{"*"}, COLUMN_CODE + "=?",
-                    new String[]{String.valueOf(code)}, null, null, null, null);
-
-            if (cursor2 != null) {
-                cursor2.moveToFirst();
-            } else {
-                Log.e(this.getClass().getSimpleName(), "cursor2 is null");
-                return null;
-            }
-            if (cursor2.getCount() > 0) {
-                savedEntry.setJokes(cursor2.getString(1));
-            }
+            if (!addJokes(code, savedEntry)) return null;
         }
 
         return savedEntry;
+    }
+
+    private boolean addJokes(String code, SavedEntry savedEntry) {
+        Cursor cursor2 = this.dataBase.query(TABLE_JOKES, new String[]{"*"}, COLUMN_CODE + "=?",
+                new String[]{String.valueOf(code)}, null, null, null, null);
+
+        if (cursor2 != null) {
+            cursor2.moveToFirst();
+        } else {
+            Log.e(this.getClass().getSimpleName(), "cursor2 is null");
+            return false;
+        }
+        if (cursor2.getCount() > 0) {
+            while (!cursor2.isAfterLast()) {
+                final String joke = cursor2.getString(2);
+                savedEntry.setJoke(joke);
+                cursor2.moveToNext();
+            }
+        }
+        return true;
     }
 
     public SavedEntry searchRandom() {
@@ -227,8 +235,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (cursor.getCount() > 0) {
             savedEntry = new SavedEntry(Integer.parseInt(cursor.getString(0)),
                     cursor.getString(1), cursor.getString(2), cursor.getString(3),
-                    cursor.getString(4), cursor.getString(5), cursor.getString(6));
+                    cursor.getString(4), cursor.getString(5));
         }
+
+        if (!addJokes(cursor.getString(1), savedEntry)) return null;
 
         return savedEntry;
     }
