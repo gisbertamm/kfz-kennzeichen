@@ -6,4 +6,5 @@
     <string name="nothing_found">Dieses Kennzeichen gibt es nicht.</string>
     <string name="jokes_heading">Sprüche</string>
     <string name="random">Zufallsauswahl</string>
+    <string name="button_propose_joke">Eigenen Spruch vorschlagen</string>
 </resources>

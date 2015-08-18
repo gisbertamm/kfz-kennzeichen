@@ -37,8 +37,8 @@
         android:layout_below="@+id/result_district_center"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/jokes_heading"/>
+        android:text="@string/jokes_heading"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
         android:id="@+id/result_jokes"
@@ -48,4 +48,13 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
         android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Button
+        android:id="@+id/button_propose_joke"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/result_jokes"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="@string/button_propose_joke" />
 </RelativeLayout>
