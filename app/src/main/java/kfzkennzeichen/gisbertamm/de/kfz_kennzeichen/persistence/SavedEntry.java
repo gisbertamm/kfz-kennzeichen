@@ -98,4 +98,14 @@ public class SavedEntry implements Serializable {
                 ", _jokes='" + _jokes + '\'' +
                 '}';
     }
+
+    public String getCrestIdentifier() {
+        String s = getCode().toLowerCase();
+        // cannot use reserved Java words
+        if ("for".equals(s) || "do".equals(s) || "new".equals(s)) {
+            s = s + s;
+        }
+        // cannot use German umlauts
+        return s.replaceAll("ä", "ae").replaceAll("ö", "oe").replaceAll("ü", "ue");
+    }
 }

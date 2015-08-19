@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -66,6 +68,7 @@ public class ResultFragment extends Fragment {
         TextView districtCenter = (TextView) view.findViewById(R.id.result_district_center);
         TextView jokes = (TextView) view.findViewById(R.id.result_jokes);
         Button proposeJoke = (Button) view.findViewById(R.id.button_propose_joke);
+        ImageView crestView = (ImageView) view.findViewById(R.id.crest);
 
         final SavedEntry savedEntry = getSavedEntry();
 
@@ -117,6 +120,13 @@ public class ResultFragment extends Fragment {
             }
         });
 
+        final int resourceId = getResources().getIdentifier(savedEntry.getCrestIdentifier(), "drawable",
+                getActivity().getPackageName());
+        try {
+            crestView.setImageDrawable(getResources().getDrawable(resourceId));
+        } catch (Resources.NotFoundException e) {
+            Log.e(getClass().getSimpleName(), "Crest resource not found for " + savedEntry.getCode() + ", identifier: " + savedEntry.getCrestIdentifier());
+        }
         return view;
     }
 
