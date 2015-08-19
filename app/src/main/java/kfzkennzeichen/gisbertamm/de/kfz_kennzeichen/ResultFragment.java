@@ -129,10 +129,10 @@ public class ResultFragment extends Fragment {
         return jokesBuff.toString();
     }
 
-    private class MailProposalTask extends AsyncTask<String, Void, String> {
+    private class MailProposalTask extends AsyncTask<String, Void, Result> {
 
         @Override
-        protected String doInBackground(String... params) {
+        protected Result doInBackground(String... params) {
             HttpClient httpClient = new DefaultHttpClient();
 
             HttpPost httpPost = new HttpPost("https://api.mailgun.net/v3/sandbox47fa9b0a752440c794641c362d468402.mailgun.org/messages");
@@ -162,6 +162,14 @@ public class ResultFragment extends Fragment {
                 try {
                     HttpResponse httpResponse = httpClient.execute(httpPost);
 
+                    Result result = new Result();
+                    result.statuscode = httpResponse.getStatusLine().getStatusCode();
+                    result.statusLine = httpResponse.getStatusLine().getReasonPhrase();
+
+                    if (httpResponse.getStatusLine().getStatusCode() != 200) {
+                        return result;
+                    }
+
                     InputStream inputStream = httpResponse.getEntity().getContent();
 
                     InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
@@ -176,29 +184,55 @@ public class ResultFragment extends Fragment {
                         stringBuilder.append(bufferedStrChunk);
                     }
 
-                    return stringBuilder.toString();
+                    result.body = stringBuilder.toString();
+                    return result;
 
                 } catch (ClientProtocolException cpe) {
-                    System.out.println("First Exception caz of HttpResponese :" + cpe);
-                    cpe.printStackTrace();
+                    Log.e(getClass().getSimpleName(), cpe.getLocalizedMessage(), cpe);
+                    Result result = new Result();
+                    result.statuscode = -1;
+                    result.body = cpe.getLocalizedMessage();
+                    return result;
                 } catch (IOException ioe) {
-                    System.out.println("Second Exception caz of HttpResponse :" + ioe);
-                    ioe.printStackTrace();
+                    Log.e(getClass().getSimpleName(), ioe.getLocalizedMessage(), ioe);
+                    Result result = new Result();
+                    result.statuscode = -1;
+                    result.body = ioe.getLocalizedMessage();
+                    return result;
                 }
 
             } catch (UnsupportedEncodingException uee) {
-                System.out.println("An Exception given because of UrlEncodedFormEntity argument :" + uee);
-                uee.printStackTrace();
+                Log.e(getClass().getSimpleName(), "Exception given because of UrlEncodedFormEntity argument: code: "
+                        + params[0] + ", Vorschlag: " + params[1], uee);
+                Result result = new Result();
+                result.statuscode = -1;
+                result.body = uee.getLocalizedMessage();
+                return result;
             }
-
-            return null;
         }
 
         @Override
-        protected void onPostExecute(String result) {
+        protected void onPostExecute(Result result) {
             super.onPostExecute(result);
 
-            Toast.makeText(getActivity().getApplicationContext(), result, Toast.LENGTH_LONG).show();
+            if (result.statuscode == 200) {
+                Toast.makeText(getActivity().getApplicationContext(), "Der Vorschlag wurde erfolgreich übermittelt.", Toast.LENGTH_SHORT).show();
+                Log.d(getClass().getSimpleName(), result.body);
+            } else {
+                // HTTP error
+                String errorMessage = result.statuscode + "(" + result.statusLine + ")";
+                if (result.statuscode == -1) { // Exception
+                    errorMessage = result.body;
+                }
+                Toast.makeText(getActivity().getApplicationContext(), "Der Vorschlag konnte leider nicht übermittelt werden. Fehler: "
+                        + errorMessage, Toast.LENGTH_SHORT).show();
+            }
         }
+    }
+
+    private class Result {
+        int statuscode;
+        String statusLine;
+        String body;
     }
 }
