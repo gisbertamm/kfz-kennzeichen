@@ -155,7 +155,7 @@ public class ResultFragment extends Fragment {
             nameValuePairList.add(textBasicNameValuePAir);
 
             try {
-                UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(nameValuePairList);
+                UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(nameValuePairList, "UTF-8");
 
                 httpPost.setEntity(urlEncodedFormEntity);
 
