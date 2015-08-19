@@ -138,7 +138,7 @@ public class ResultFragment extends Fragment {
             HttpPost httpPost = new HttpPost("https://api.mailgun.net/v3/sandbox47fa9b0a752440c794641c362d468402.mailgun.org/messages");
 
             String base64EncodedCredentials = "Basic " + Base64.encodeToString(
-                    ("api" + ":" + "").getBytes(),
+                    ("api" + ":" + getResources().getString(R.string.api_key)).getBytes(),
                     Base64.NO_WRAP);
 
 
