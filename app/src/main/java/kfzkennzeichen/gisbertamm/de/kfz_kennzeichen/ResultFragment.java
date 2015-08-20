@@ -81,11 +81,7 @@ public class ResultFragment extends Fragment {
             district.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String url = DatabaseHandler.WIKIPEDIA_BASE_URL + savedEntry.getDistrictWikipediaUrl();
-                    Log.d(getClass().getSimpleName(), "Open url: " + url);
-                    Intent i = new Intent(Intent.ACTION_VIEW);
-                    i.setData(Uri.parse(url));
-                    startActivity(i);
+                    openWikipediaPage(savedEntry);
                 }
             });
             districtCenter.setText("abgeleitet von: " + savedEntry.getDistrictCenter()
@@ -133,7 +129,24 @@ public class ResultFragment extends Fragment {
         } catch (Resources.NotFoundException e) {
             Log.e(getClass().getSimpleName(), "Crest resource not found for " + savedEntry.getCode() + ", identifier: " + savedEntry.getCrestIdentifier());
         }
+
+        crestView.setClickable(true);
+        crestView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openWikipediaPage(savedEntry);
+            }
+        });
+
         return view;
+    }
+
+    private void openWikipediaPage(SavedEntry savedEntry) {
+        String url = DatabaseHandler.WIKIPEDIA_BASE_URL + savedEntry.getDistrictWikipediaUrl();
+        Log.d(getClass().getSimpleName(), "Open url: " + url);
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(url));
+        startActivity(i);
     }
 
     private String concatJokesStrings(List<String> jokesList) {
