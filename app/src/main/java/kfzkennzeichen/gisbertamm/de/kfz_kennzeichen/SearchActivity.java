@@ -33,7 +33,7 @@ public class SearchActivity extends ActionBarActivity implements OnSearchComplet
         }
 
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.replace(R.id.container, search, SEARCH).addToBackStack(SEARCH);
+        ft.replace(R.id.container, search, SEARCH);
         ft.commit();
     }
 
@@ -67,12 +67,7 @@ public class SearchActivity extends ActionBarActivity implements OnSearchComplet
             Log.d(this.getClass().getSimpleName(), "Nothing found for " + code);
         }
 
-        ResultFragment result = (ResultFragment)
-                getFragmentManager().findFragmentByTag(RESULT);
-        if (result == null) {
-            result = ResultFragment.newInstance(entry);
-
-        }
+        ResultFragment result = ResultFragment.newInstance(entry);
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.container, result, RESULT).addToBackStack(RESULT);
         ft.commit();
@@ -81,7 +76,7 @@ public class SearchActivity extends ActionBarActivity implements OnSearchComplet
     @Override
     public void onBackPressed() {
         FragmentManager fragmentManager = getFragmentManager();
-        if(fragmentManager.getBackStackEntryCount() != 0) {
+        if (fragmentManager.getBackStackEntryCount() != 0) {
             fragmentManager.popBackStack();
         } else {
             super.onBackPressed();
