@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -123,7 +124,12 @@ public class ResultFragment extends Fragment {
         final int resourceId = getResources().getIdentifier(savedEntry.getCrestIdentifier(), "drawable",
                 getActivity().getPackageName());
         try {
-            crestView.setImageDrawable(getResources().getDrawable(resourceId));
+            Drawable d = getResources().getDrawable(resourceId);
+            if (d != null) {
+                crestView.setImageDrawable(d);
+            } else {
+                Log.e(getClass().getSimpleName(), "Crest drawable is null for " + savedEntry.getCode() + ", identifier: " + savedEntry.getCrestIdentifier());
+            }
         } catch (Resources.NotFoundException e) {
             Log.e(getClass().getSimpleName(), "Crest resource not found for " + savedEntry.getCode() + ", identifier: " + savedEntry.getCrestIdentifier());
         }
