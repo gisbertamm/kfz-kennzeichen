@@ -63,35 +63,37 @@ public class ResultFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_result, container, false);
-
+        final SavedEntry savedEntry = getSavedEntry();
         final TextView code = (TextView) view.findViewById(R.id.result_code);
+        Button proposeJoke = (Button) view.findViewById(R.id.button_propose_joke);
+
+        if (savedEntry == null) { // nothing found
+            code.setText(getString(R.string.nothing_found));
+            proposeJoke.setVisibility(View.INVISIBLE);
+            view.findViewById(R.id.result_jokes_heading).setVisibility(View.INVISIBLE);
+            return view;
+        }
+
         TextView district = (TextView) view.findViewById(R.id.result_district);
         TextView districtCenter = (TextView) view.findViewById(R.id.result_district_center);
         TextView jokes = (TextView) view.findViewById(R.id.result_jokes);
-        Button proposeJoke = (Button) view.findViewById(R.id.button_propose_joke);
         ImageView crestView = (ImageView) view.findViewById(R.id.crest);
 
-        final SavedEntry savedEntry = getSavedEntry();
+        code.setText(savedEntry.getCode());
 
-        if (savedEntry != null) {
-            code.setText(savedEntry.getCode());
+        district.setText(savedEntry.getDistrict());
+        district.setClickable(true);
+        district.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openWikipediaPage(savedEntry);
+            }
+        });
+        districtCenter.setText("abgeleitet von: " + savedEntry.getDistrictCenter()
+                + " (" + savedEntry.get_state() + ")");
 
-            district.setText(savedEntry.getDistrict());
-            district.setClickable(true);
-            district.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    openWikipediaPage(savedEntry);
-                }
-            });
-            districtCenter.setText("abgeleitet von: " + savedEntry.getDistrictCenter()
-                    + " (" + savedEntry.get_state() + ")");
-
-            String jokesText = concatJokesStrings(savedEntry.getJokes());
-            jokes.setText(jokesText);
-        } else {
-            code.setText(getString(R.string.nothing_found));
-        }
+        String jokesText = concatJokesStrings(savedEntry.getJokes());
+        jokes.setText(jokesText);
 
         proposeJoke.setOnClickListener(new View.OnClickListener() {
             @Override
