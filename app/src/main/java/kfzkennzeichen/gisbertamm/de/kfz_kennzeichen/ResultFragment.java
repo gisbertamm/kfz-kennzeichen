@@ -1,5 +1,6 @@
 package kfzkennzeichen.gisbertamm.de.kfz_kennzeichen;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
@@ -12,12 +13,14 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Base64;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -98,13 +101,18 @@ public class ResultFragment extends Fragment {
         proposeJoke.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Set an EditText view to get user input
+                // set an EditText view to get user input; need layout around for padding
+                LinearLayout layout = new LinearLayout(getActivity());
+                layout.setOrientation(LinearLayout.VERTICAL);
+                layout.setGravity(Gravity.CENTER_HORIZONTAL);
                 final EditText input = new EditText(getActivity());
+                layout.setPadding(20, 0, 20, 0);
+                layout.addView(input);
 
                 new AlertDialog.Builder(getActivity())
                         .setTitle("Eigenen Text vorschlagen")
                         .setMessage("Bitte Text eingeben (maximal 30 Zeichen).")
-                        .setView(input)
+                        .setView(layout)
                         .setPositiveButton("Vorschlagen", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 MailProposalTask proposalTask = new MailProposalTask();
