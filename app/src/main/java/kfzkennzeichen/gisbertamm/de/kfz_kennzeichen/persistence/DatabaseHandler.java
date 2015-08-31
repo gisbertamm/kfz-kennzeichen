@@ -58,10 +58,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      */
     public void createDataBase() {
 
-        boolean dbExist = checkDataBase();
+        SQLiteDatabase dbExist = checkDataBase();
 
-        if (dbExist) {
-            //do nothing - database already exist
+        if (dbExist != null) {
+            int version = dbExist.getVersion();
+            Log.d(this.getClass().getSimpleName(), "EXISTING DATABASE VERSION: " + version);
+            dbExist.close();
+
+            if (DATABASE_VERSION > version) {
+                // update existing database by overriding it
+                copyDataBase();
+            }
         } else {
 
             //By calling this method an empty database will be created into the default system path
@@ -78,7 +85,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      *
      * @return true if it exists, false if it doesn't
      */
-    private boolean checkDataBase() {
+    private SQLiteDatabase checkDataBase() {
 
         SQLiteDatabase checkDB = null;
 
@@ -91,14 +98,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             //database does't exist yet.
 
         }
-
-        if (checkDB != null) {
-
-            checkDB.close();
-
-        }
-
-        return checkDB != null ? true : false;
+        return checkDB;
     }
 
     /**
@@ -113,6 +113,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
             // Path to the just created empty db
             String outFileName = DB_PATH + DATABASE_NAME;
+
+            Log.d(this.getClass().getSimpleName(),
+                    "Copying database from assets/ " + DATABASE_NAME + " to " + outFileName);
 
             //Open the empty db as the output stream
             OutputStream myOutput = new FileOutputStream(outFileName);
