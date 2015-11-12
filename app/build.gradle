@@ -8,8 +8,8 @@ android {
         applicationId "kfzkennzeichen.gisbertamm.de.kfz_kennzeichen"
         minSdkVersion 18
         targetSdkVersion 21
-        versionCode 4
-        versionName "1.0.3"
+        versionCode 5
+        versionName "1.0.4"
     }
     buildTypes {
         release {
