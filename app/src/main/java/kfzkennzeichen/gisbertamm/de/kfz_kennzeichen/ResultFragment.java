@@ -190,7 +190,7 @@ public class ResultFragment extends Fragment {
             nameValuePairList.add(toBasicNameValuePAir);
             BasicNameValuePair subjectBasicNameValuePair = new BasicNameValuePair("subject", "Neuer Vorschlag für Kennzeichen-Joke (Android)");
             nameValuePairList.add(subjectBasicNameValuePair);
-            BasicNameValuePair textBasicNameValuePAir = new BasicNameValuePair("text", "code: " + params[0] + ", Vorschlag: " + params[1]);
+            BasicNameValuePair textBasicNameValuePAir = new BasicNameValuePair("text", params[0] + "; " + params[1]);
             nameValuePairList.add(textBasicNameValuePAir);
 
             try {
