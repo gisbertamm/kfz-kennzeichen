@@ -26,15 +26,22 @@ public class SearchActivity extends ActionBarActivity implements OnSearchComplet
     protected void onResume() {
         super.onResume();
 
-        SearchFragment search = (SearchFragment)
-                getFragmentManager().findFragmentByTag(SEARCH);
-        if (search == null) {
-            search = new SearchFragment();
+        ResultFragment result = (ResultFragment)
+                getFragmentManager().findFragmentByTag(RESULT);
+        if (result != null) { // redisplay search result if there is one
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.replace(R.id.container, result, RESULT);
+            ft.commit();
+        } else { // no result; start new search
+            SearchFragment search = (SearchFragment)
+                    getFragmentManager().findFragmentByTag(SEARCH);
+            if (search == null) {
+                search = new SearchFragment();
+            }
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.replace(R.id.container, search, SEARCH);
+            ft.commit();
         }
-
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.replace(R.id.container, search, SEARCH);
-        ft.commit();
     }
 
     @Override
@@ -82,4 +89,5 @@ public class SearchActivity extends ActionBarActivity implements OnSearchComplet
             super.onBackPressed();
         }
     }
+
 }
