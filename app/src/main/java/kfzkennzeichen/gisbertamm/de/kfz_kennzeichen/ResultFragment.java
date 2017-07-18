@@ -1,6 +1,5 @@
 package kfzkennzeichen.gisbertamm.de.kfz_kennzeichen;
 
-import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
@@ -11,6 +10,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.InputFilter;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
@@ -106,6 +106,8 @@ public class ResultFragment extends Fragment {
                 layout.setOrientation(LinearLayout.VERTICAL);
                 layout.setGravity(Gravity.CENTER_HORIZONTAL);
                 final EditText input = new EditText(getActivity());
+                int maxLength = 30;
+                input.setFilters(new InputFilter[] {new InputFilter.LengthFilter(maxLength)});
                 layout.setPadding(20, 0, 20, 0);
                 layout.addView(input);
 
