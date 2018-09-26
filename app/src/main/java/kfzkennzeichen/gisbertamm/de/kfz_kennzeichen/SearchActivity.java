@@ -1,8 +1,8 @@
 package kfzkennzeichen.gisbertamm.de.kfz_kennzeichen;
 
+import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -11,7 +11,7 @@ import android.view.MenuItem;
 import kfzkennzeichen.gisbertamm.de.kfz_kennzeichen.persistence.SavedEntry;
 
 
-public class SearchActivity extends ActionBarActivity implements OnSearchCompletedListener {
+public class SearchActivity extends Activity implements OnSearchCompletedListener {
 
     private static final String SEARCH = "searchFragment";
     private static final String RESULT = "resultFragment";
@@ -89,5 +89,4 @@ public class SearchActivity extends ActionBarActivity implements OnSearchComplet
             super.onBackPressed();
         }
     }
-
 }

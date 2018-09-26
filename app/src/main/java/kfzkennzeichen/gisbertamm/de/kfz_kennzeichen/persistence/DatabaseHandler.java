@@ -17,7 +17,7 @@ import java.util.List;
 
 
 public class DatabaseHandler extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 8;
 
     private static final String DATABASE_NAME = "NumberplateCodesManager.sqlite";
 
@@ -32,9 +32,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String COLUMN_DISTRICT_WIKIPEDIA_URL = "district_wikipedia_url";
     public static final String WIKIPEDIA_BASE_URL = "https://de.wikipedia.org";
     private static final List<String[]> data = new ArrayList<String[]>();
-
-    //The Android's default system path of your application database.
-    private static String DB_PATH = "/data/data/kfzkennzeichen.gisbertamm.de.kfz_kennzeichen/databases/";
 
     private SQLiteDatabase dataBase;
 
@@ -90,8 +87,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase checkDB = null;
 
         try {
-            String myPath = DB_PATH + DATABASE_NAME;
-            checkDB = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
+            checkDB = context.openOrCreateDatabase(DATABASE_NAME, Context.MODE_PRIVATE, null);
 
         } catch (SQLiteException e) {
 
@@ -112,7 +108,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             InputStream myInput = context.getAssets().open(DATABASE_NAME);
 
             // Path to the just created empty db
-            String outFileName = DB_PATH + DATABASE_NAME;
+            String outFileName = context.getDatabasePath(DATABASE_NAME).getPath();
 
             Log.d(this.getClass().getSimpleName(),
                     "Copying database from assets/ " + DATABASE_NAME + " to " + outFileName);
@@ -140,8 +136,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void openDataBase() throws SQLException {
 
         //Open the database
-        String myPath = DB_PATH + DATABASE_NAME;
-        dataBase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
+        dataBase = context.openOrCreateDatabase(DATABASE_NAME, Context.MODE_PRIVATE, null);
 
     }
 

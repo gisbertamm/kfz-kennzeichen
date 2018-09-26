@@ -9,7 +9,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.text.InputFilter;
 import android.util.Base64;
 import android.util.Log;
@@ -62,7 +61,6 @@ public class ResultFragment extends Fragment {
         return (SavedEntry) getArguments().getSerializable(ENTRY);
     }
 
-    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_result, container, false);
