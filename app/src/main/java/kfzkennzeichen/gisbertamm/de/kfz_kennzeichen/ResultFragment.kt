@@ -35,7 +35,7 @@ class ResultFragment : Fragment() {
     val savedEntry: SavedEntry?
         get() = arguments.getSerializable(ENTRY) as SavedEntry?
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_result, container, false)
         val savedEntry = savedEntry
         val code = view.findViewById<View>(R.id.result_code) as TextView
@@ -115,7 +115,7 @@ class ResultFragment : Fragment() {
     }
 
     private inner class MailProposalTask : AsyncTask<String?, Void?, Result>() {
-        protected override fun doInBackground(vararg params: String): Result {
+        protected override fun doInBackground(vararg params: String?): Result {
             val httpClient: HttpClient = DefaultHttpClient()
             val httpPost = HttpPost("https://api.mailgun.net/v3/sandbox47fa9b0a752440c794641c362d468402.mailgun.org/messages")
             val base64EncodedCredentials = "Basic " + Base64.encodeToString(
@@ -200,6 +200,8 @@ class ResultFragment : Fragment() {
 
     companion object {
         const val ENTRY = "entry"
+
+        @JvmStatic
         fun newInstance(entry: SavedEntry?): ResultFragment {
             val f = ResultFragment()
             val args = Bundle()

@@ -16,18 +16,18 @@ class SearchActivity : Activity(), OnSearchCompletedListener {
 
     override fun onResume() {
         super.onResume()
-        val result = fragmentManager.findFragmentByTag(RESULT) as ResultFragment
+        val result = fragmentManager.findFragmentByTag(RESULT)
         if (result != null) { // redisplay search result if there is one
             val ft = fragmentManager.beginTransaction()
-            ft.replace(R.id.container, result, RESULT)
+            ft.replace(R.id.container, result as ResultFragment, RESULT)
             ft.commit()
         } else { // no result; start new search
-            var search = fragmentManager.findFragmentByTag(SEARCH) as SearchFragment
+            var search = fragmentManager.findFragmentByTag(SEARCH)
             if (search == null) {
                 search = SearchFragment()
             }
             val ft = fragmentManager.beginTransaction()
-            ft.replace(R.id.container, search, SEARCH)
+            ft.replace(R.id.container, search as SearchFragment, SEARCH)
             ft.commit()
         }
     }
