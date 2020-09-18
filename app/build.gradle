@@ -9,7 +9,7 @@ android {
         applicationId "kfzkennzeichen.gisbertamm.de.kfz_kennzeichen"
         minSdkVersion 19
         targetSdkVersion 29
-        versionCode 11
+        versionCode 12
         versionName "1.1.0"
     }
     buildTypes {
