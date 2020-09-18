@@ -1,7 +1,6 @@
 package kfzkennzeichen.gisbertamm.de.kfz_kennzeichen
 
 import android.app.Activity
-import android.app.Fragment
 import android.os.Bundle
 import android.text.Html
 import android.text.InputFilter
@@ -13,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import kfzkennzeichen.gisbertamm.de.kfz_kennzeichen.persistence.DatabaseHandler
 import java.util.*
 

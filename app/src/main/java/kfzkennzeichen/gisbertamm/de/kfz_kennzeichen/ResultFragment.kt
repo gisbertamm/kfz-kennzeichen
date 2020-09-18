@@ -1,7 +1,6 @@
 package kfzkennzeichen.gisbertamm.de.kfz_kennzeichen
 
 import android.app.AlertDialog
-import android.app.Fragment
 import android.content.Intent
 import android.content.res.Resources.NotFoundException
 import android.net.Uri
@@ -16,6 +15,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.fragment.app.Fragment
 import kfzkennzeichen.gisbertamm.de.kfz_kennzeichen.persistence.DatabaseHandler
 import kfzkennzeichen.gisbertamm.de.kfz_kennzeichen.persistence.SavedEntry
 import org.apache.http.NameValuePair
@@ -33,7 +33,7 @@ import java.util.*
 
 class ResultFragment : Fragment() {
     val savedEntry: SavedEntry?
-        get() = arguments.getSerializable(ENTRY) as SavedEntry?
+        get() = arguments?.getSerializable(ENTRY) as SavedEntry?
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_result, container, false)
@@ -81,7 +81,7 @@ class ResultFragment : Fragment() {
                     }.show()
         }
         val resourceId = resources.getIdentifier(savedEntry.crestIdentifier, "drawable",
-                activity.packageName)
+                activity?.packageName)
         try {
             val d = resources.getDrawable(resourceId)
             if (d != null) {
@@ -178,7 +178,7 @@ class ResultFragment : Fragment() {
         override fun onPostExecute(result: Result) {
             super.onPostExecute(result)
             if (result.statuscode == 200) {
-                Toast.makeText(activity.applicationContext, "Der Vorschlag wurde erfolgreich übermittelt.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity?.applicationContext, "Der Vorschlag wurde erfolgreich übermittelt.", Toast.LENGTH_SHORT).show()
                 Log.d(javaClass.simpleName, result.body)
             } else {
                 // HTTP error
@@ -186,7 +186,7 @@ class ResultFragment : Fragment() {
                 if (result.statuscode == -1) { // Exception
                     errorMessage = result.body
                 }
-                Toast.makeText(activity.applicationContext, "Der Vorschlag konnte leider nicht übermittelt werden. Fehler: "
+                Toast.makeText(activity?.applicationContext, "Der Vorschlag konnte leider nicht übermittelt werden. Fehler: "
                         + errorMessage, Toast.LENGTH_SHORT).show()
             }
         }

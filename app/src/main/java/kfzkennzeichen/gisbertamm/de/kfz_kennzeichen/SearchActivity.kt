@@ -1,14 +1,14 @@
 package kfzkennzeichen.gisbertamm.de.kfz_kennzeichen
 
-import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import kfzkennzeichen.gisbertamm.de.kfz_kennzeichen.ResultFragment.Companion.newInstance
 import kfzkennzeichen.gisbertamm.de.kfz_kennzeichen.persistence.SavedEntry
 
-class SearchActivity : Activity(), OnSearchCompletedListener {
+class SearchActivity : AppCompatActivity(), OnSearchCompletedListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
@@ -16,18 +16,18 @@ class SearchActivity : Activity(), OnSearchCompletedListener {
 
     override fun onResume() {
         super.onResume()
-        val result = fragmentManager.findFragmentByTag(RESULT)
+        val result = supportFragmentManager.findFragmentByTag(RESULT)
         if (result != null) { // redisplay search result if there is one
-            val ft = fragmentManager.beginTransaction()
-            ft.replace(R.id.container, result as ResultFragment, RESULT)
+            val ft = supportFragmentManager.beginTransaction()
+            ft.replace(R.id.container, result, RESULT)
             ft.commit()
         } else { // no result; start new search
-            var search = fragmentManager.findFragmentByTag(SEARCH)
+            var search = supportFragmentManager.findFragmentByTag(SEARCH)
             if (search == null) {
                 search = SearchFragment()
             }
-            val ft = fragmentManager.beginTransaction()
-            ft.replace(R.id.container, search as SearchFragment, SEARCH)
+            val ft = supportFragmentManager.beginTransaction()
+            ft.replace(R.id.container, search, SEARCH)
             ft.commit()
         }
     }
@@ -55,7 +55,7 @@ class SearchActivity : Activity(), OnSearchCompletedListener {
             Log.d(this.javaClass.simpleName, "Nothing found for $code")
         }
         val result = newInstance(entry)
-        val ft = fragmentManager.beginTransaction()
+        val ft = supportFragmentManager.beginTransaction()
         ft.replace(R.id.container, result, RESULT).addToBackStack(RESULT)
         ft.commit()
     }
