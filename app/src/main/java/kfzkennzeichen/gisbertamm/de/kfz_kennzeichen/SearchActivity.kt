@@ -61,7 +61,7 @@ class SearchActivity : AppCompatActivity(), OnSearchCompletedListener {
     }
 
     override fun onBackPressed() {
-        val fragmentManager = fragmentManager
+        val fragmentManager = supportFragmentManager
         if (fragmentManager.backStackEntryCount != 0) {
             fragmentManager.popBackStack()
         } else {
