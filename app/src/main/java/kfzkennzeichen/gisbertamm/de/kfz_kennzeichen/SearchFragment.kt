@@ -53,6 +53,10 @@ class SearchFragment : Fragment() {
             // propagate result to parent activity for further processing
             mListener?.onSearchCompleted(savedEntry, savedEntry.code)
         }
+        jokes_statistics_button.setOnClickListener({
+            val db = DatabaseHandler(activity)
+            db.createStatistics()
+        })
     }
 
     private fun configureInputFilters(numberplateCodeInput: EditText) {

@@ -7,4 +7,5 @@
     <string name="jokes_heading">Sprüche</string>
     <string name="random">Zufallsauswahl</string>
     <string name="button_propose_joke">Eigenen Spruch vorschlagen</string>
+    <string name="jokes_statistics">Über die Sprüche</string>
 </resources>

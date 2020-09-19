@@ -55,4 +55,15 @@
         android:layout_marginTop="24dp"
         android:text="@string/random" />
 
+    <Button
+        android:id="@+id/jokes_statistics_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/random_button"
+        android:layout_alignLeft="@+id/input_label"
+        android:layout_alignRight="@+id/input_label"
+        android:layout_marginTop="24dp"
+        android:text="@string/jokes_statistics" />
+
+
 </RelativeLayout>
