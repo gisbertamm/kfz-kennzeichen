@@ -9,11 +9,10 @@ import android.text.InputFilter.LengthFilter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import kfzkennzeichen.gisbertamm.de.kfz_kennzeichen.persistence.DatabaseHandler
+import kotlinx.android.synthetic.main.fragment_search.*
 import java.util.*
 
 class SearchFragment : Fragment() {
@@ -29,32 +28,31 @@ class SearchFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_search, container, false)
-        val carSymbol = view.findViewById<View>(R.id.car_symbol) as TextView
-        carSymbol.text = Html.fromHtml(UTF8_CAR_SYMBOL)
-        val numberplateCodeInput = view.findViewById<View>(R.id.numberplate_code_input) as EditText
-        configureInputFilters(numberplateCodeInput)
-        val searchButton = view.findViewById<View>(R.id.search_button) as Button
-        searchButton.setOnClickListener {
+        return inflater.inflate(R.layout.fragment_search, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        car_symbol.text = Html.fromHtml(UTF8_CAR_SYMBOL)
+        configureInputFilters(numberplate_code_input)
+        search_button.setOnClickListener {
             val db = DatabaseHandler(activity)
-            val code = numberplateCodeInput.text.toString()
+            val code = numberplate_code_input.text.toString()
             val savedEntry = db.searchForCode(code)
 
             // clear input field
-            numberplateCodeInput.editableText.clear()
+            numberplate_code_input.editableText.clear()
 
             // propagate result to parent activity for further processing
-            mListener!!.onSearchCompleted(savedEntry, code)
+            mListener?.onSearchCompleted(savedEntry, code)
         }
-        val randomButton = view.findViewById<View>(R.id.random_button) as Button
-        randomButton.setOnClickListener {
+        random_button.setOnClickListener {
             val db = DatabaseHandler(activity)
             val savedEntry = db.searchRandom()
 
             // propagate result to parent activity for further processing
-            mListener!!.onSearchCompleted(savedEntry, savedEntry.code)
+            mListener?.onSearchCompleted(savedEntry, savedEntry.code)
         }
-        return view
     }
 
     private fun configureInputFilters(numberplateCodeInput: EditText) {
