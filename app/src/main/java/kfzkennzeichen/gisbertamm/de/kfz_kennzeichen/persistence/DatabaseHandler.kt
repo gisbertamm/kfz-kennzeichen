@@ -178,12 +178,12 @@ class DatabaseHandler(private val context: Context) : SQLiteOpenHelper(context, 
         } catch (e: SQLException) {
             e.printStackTrace()
         }
-        val cursor = dataBase!!.query(TABLE_JOKES, arrayOf("*"), COLUMN_JOKES + "=?", arrayOf("Null Frankfurt"), null, null, null, null)
+        val cursor = dataBase!!.query(TABLE_JOKES, arrayOf("COUNT(*)"), "$COLUMN_JOKES like ?", arrayOf("%Esel%"), null, null, null, null)
         cursor?.moveToFirst() ?: Log.e(this.javaClass.simpleName, "cursor is null")
         if (cursor!!.count > 0) {
             while (!cursor.isAfterLast) {
-                val code = cursor.getString(1)
-                Log.d(TAG, "Code for 'Null Frankfurt' is $code")
+                val code = cursor.getString(0)
+                Log.d(TAG, "Number of Esel is $code")
                 cursor.moveToNext()
             }
         }

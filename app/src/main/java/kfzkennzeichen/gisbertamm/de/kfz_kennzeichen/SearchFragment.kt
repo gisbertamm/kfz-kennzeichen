@@ -36,9 +36,9 @@ class SearchFragment : Fragment() {
         car_symbol.text = Html.fromHtml(UTF8_CAR_SYMBOL)
         configureInputFilters(numberplate_code_input)
         search_button.setOnClickListener {
-            val db = DatabaseHandler(activity)
+            val db = activity?.let { it1 -> DatabaseHandler(it1) }
             val code = numberplate_code_input.text.toString()
-            val savedEntry = db.searchForCode(code)
+            val savedEntry = db?.searchForCode(code)
 
             // clear input field
             numberplate_code_input.editableText.clear()
@@ -47,16 +47,16 @@ class SearchFragment : Fragment() {
             mListener?.onSearchCompleted(savedEntry, code)
         }
         random_button.setOnClickListener {
-            val db = DatabaseHandler(activity)
-            val savedEntry = db.searchRandom()
+            val db = activity?.let { it1 -> DatabaseHandler(it1) }
+            val savedEntry = db?.searchRandom()
 
             // propagate result to parent activity for further processing
-            mListener?.onSearchCompleted(savedEntry, savedEntry.code)
+            mListener?.onSearchCompleted(savedEntry, savedEntry?.code)
         }
-        jokes_statistics_button.setOnClickListener({
-            val db = DatabaseHandler(activity)
-            db.createStatistics()
-        })
+        jokes_statistics_button.setOnClickListener {
+            val db = activity?.let { it1 -> DatabaseHandler(it1) }
+            db?.createStatistics()
+        }
     }
 
     private fun configureInputFilters(numberplateCodeInput: EditText) {
