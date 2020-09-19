@@ -172,21 +172,28 @@ class DatabaseHandler(private val context: Context) : SQLiteOpenHelper(context, 
         return if (!addJokes(cursor.getString(1), savedEntry)) null else savedEntry
     }
 
-    fun createStatistics() {
+    fun createStatistics(): Map<String, String> {
+        val output = HashMap<String, String>()
         try {
             openDataBase()
         } catch (e: SQLException) {
             e.printStackTrace()
+            return output
         }
-        val cursor = dataBase!!.query(TABLE_JOKES, arrayOf("COUNT(*)"), "$COLUMN_JOKES like ?", arrayOf("%Esel%"), null, null, null, null)
-        cursor?.moveToFirst() ?: Log.e(this.javaClass.simpleName, "cursor is null")
-        if (cursor!!.count > 0) {
-            while (!cursor.isAfterLast) {
-                val code = cursor.getString(0)
-                Log.d(TAG, "Number of Esel is $code")
-                cursor.moveToNext()
+        val input = listOf("Affe", "Blödmann", "Blödmänner", "Dummkopf", "Esel", "Hirn", "Idiot", "Ochse", "Penner", "Rindvieh", "Sau", "Schwein", "Trottel")
+        input.map {
+            val cursor = dataBase!!.query(TABLE_JOKES, arrayOf("COUNT(*)"), "$COLUMN_JOKES like ?", arrayOf("%$it%"), null, null, null, null)
+            cursor?.moveToFirst() ?: Log.e(this.javaClass.simpleName, "cursor is null")
+            if (cursor!!.count > 0) {
+                while (!cursor.isAfterLast) {
+                    val count = cursor.getString(0)
+                    Log.d(TAG, "Number of $it is $count")
+                    output[it] = count
+                    cursor.moveToNext()
+                }
             }
         }
+        return output
     }
 
     companion object {
