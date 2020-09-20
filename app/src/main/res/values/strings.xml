@@ -8,4 +8,6 @@
     <string name="random">Zufallsauswahl</string>
     <string name="button_propose_joke">Eigenen Spruch vorschlagen</string>
     <string name="jokes_statistics">Über die Sprüche</string>
+    <string name="about_the_jokes">Über die Sprüche</string>
+    <string name="statistics_intro">Die ursprüngliche Sprüchesammlung stammte von einschlägigen Websiten. Inzwischen gehen aber auch viele Vorschläge von Nutzern der App ein, so dass stets neue dazukommen. Die meisten Sprüche erklären die Autofahrer aus den Nachbarbezirken zu Trotteln, Dummköpfen und Idioten. Hier werden die Schimpfwörter aufgelistet, die am häufigsten in den Sprüchen vorkommen.</string>
 </resources>

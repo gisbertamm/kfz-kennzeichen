@@ -60,6 +60,13 @@ class SearchActivity : AppCompatActivity(), OnSearchCompletedListener {
         ft.commit()
     }
 
+    override fun onStatisticsCompleted(statistics: Map<String, Int>?) {
+        val statistics = StatisticsFragment.newInstance(statistics)
+        val ft = supportFragmentManager.beginTransaction()
+        ft.replace(R.id.container, statistics, RESULT).addToBackStack(STATISTICS)
+        ft.commit()
+    }
+
     override fun onBackPressed() {
         val fragmentManager = supportFragmentManager
         if (fragmentManager.backStackEntryCount != 0) {
@@ -72,5 +79,6 @@ class SearchActivity : AppCompatActivity(), OnSearchCompletedListener {
     companion object {
         private const val SEARCH = "searchFragment"
         private const val RESULT = "resultFragment"
+        private const val STATISTICS = "statisticsFragment"
     }
 }

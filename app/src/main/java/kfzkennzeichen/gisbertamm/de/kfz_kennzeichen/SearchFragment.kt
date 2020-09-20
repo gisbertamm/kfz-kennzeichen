@@ -56,7 +56,9 @@ class SearchFragment : Fragment() {
         }
         jokes_statistics_button.setOnClickListener {
             val db = activity?.let { it1 -> DatabaseHandler(it1) }
-            Log.d(TAG, db?.createStatistics().toString())
+            val statistics = db?.createStatistics()
+            mListener?.onStatisticsCompleted(statistics)
+            Log.d(TAG, statistics.toString())
         }
     }
 
