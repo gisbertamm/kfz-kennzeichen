@@ -6,6 +6,7 @@ import android.text.Html
 import android.text.InputFilter
 import android.text.InputFilter.AllCaps
 import android.text.InputFilter.LengthFilter
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -55,7 +56,7 @@ class SearchFragment : Fragment() {
         }
         jokes_statistics_button.setOnClickListener {
             val db = activity?.let { it1 -> DatabaseHandler(it1) }
-            db?.createStatistics()
+            Log.d(TAG, db?.createStatistics().toString())
         }
     }
 
@@ -68,6 +69,7 @@ class SearchFragment : Fragment() {
     }
 
     companion object {
+        const val TAG = "SearchFragment"
         const val UTF8_CAR_SYMBOL = "&#x1f697;"
     }
 }
