@@ -188,9 +188,17 @@ class DatabaseHandler(private val context: Context) : SQLiteOpenHelper(context, 
                 cursor.moveToNext()
             }
         }
-        return allWords.groupingBy { it }.eachCount().filter { (key, value) -> key != "ein" && key != "und" && key != "ohne"  && key != "Ohne" && value >= 8 }.toList()
+        return allWords.groupingBy { it }.eachCount().filter { (key, value) -> isInteresting(key) && hasRelevantAmount(value) }.toList()
                 .sortedByDescending { (key, value) -> value }
                 .toMap()
+    }
+
+    private fun hasRelevantAmount(value: Int) = value >= 5
+
+    private fun isInteresting(key: String): Boolean {
+        val excludeList = listOf("ein", "und", "ohne", "Ohne", "unterwegs", "Wir", "fährt", "Fahrer", "fährt", "im", "Kein", "Keine", "der", "am", "Noch", "kommen", "Nur")
+        if (key in excludeList) return false
+        return true
     }
 
     companion object {
